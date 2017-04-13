@@ -32,12 +32,16 @@ import sendgrid.cio as cio
 import json
 cio.set_testing_mode()
 
+try:
+    from urllib.error import HTTPError
+except ImportError:
+    from urllib2 import HTTPError
+
 class MockSpam(cio.MockSimple):
     def __init__(self, data):
         self.data = data
 
     def time_period_data(self, start_time, end_time):
-        #raise ValueError('{} - {}'.format(start_time, end_time))
         return filter(lambda a: end_time <= a['created'] <= start_time, self.data)
 
     def limit_data(self, limit, offset):
