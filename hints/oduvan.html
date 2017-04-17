@@ -1,8 +1,3 @@
-
-
-
-
-
 <body data-author="oduvan">
 <div class="question-answer">
     <div class="question">
@@ -14,10 +9,55 @@
 </div>
 <div class="question-answer">
     <div class="question">
-        Ok. Can you give me one more advice here?
+        How can I do it in Python
     </div>
     <div class="answer">
-        spam_reports API accepts timestamp. You need to convert string format in to timestamp.
+<pre class="brush: python">
+response = sg.client.suppression.spam_reports.get(query_params={
+    'end_time': 1399496426,
+    'start_time': 1399514567
+})
+</pre>
+    </div>
+</div>
+
+<div class="question-answer">
+    <div class="question">
+        What is start_time and end_time here? How I can get this number out of date?
+    </div>
+    <div class="answer">
+        This number is timestamp. datetime module can easily convert string date into time stamp
+    </div>
+</div>
+
+<div class="question-answer">
+    <div class="question">
+        Can you show me the code?
+    </div>
+    <div class="answer">
+<pre class="brush: python">
+end_time = datetime.strptime(str_date, '%Y-%m-%d')
+start_time = end_time + timedelta(days=1)
+response = sg.client.suppression.spam_reports.get(query_params={
+    'end_time':int(end_time.timestamp()),
+    'start_time': int(start_time.timestamp())
+})
+</pre>
+    </div>
+</div>
+
+<div class="question-answer">
+    <div class="question">
+        Is that's it?
+    </div>
+    <div class="answer">
+        <p>Almoust.. You need to return the size</p>
+        <pre class="brush: python">
+import json
+
+data = json.loads(response.body)
+return len(data)
+        </pre>
     </div>
 </div>
 
