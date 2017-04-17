@@ -27,10 +27,22 @@ checkio.referee.cover_codes
 """
 
 SENDGRID_COVER = '''
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 import sendgrid
-import sendgrid.cio as cio
+try:
+    import sendgrid.cio as cio
+except ImportError:
+    import cio
 import json
 cio.set_testing_mode()
+
+try:
+    from urllib.error import HTTPError
+except ImportError:
+    from urllib2 import HTTPError
 
 try:
     from urllib.error import HTTPError
@@ -44,31 +56,59 @@ class MockSpam(cio.MockSimple):
     def time_period_data(self, start_time, end_time):
         return filter(lambda a: end_time <= a['created'] <= start_time, self.data)
 
+    def start_time_limit_data(self, start_time, limit, offset):
+        return filter(lambda a: a['created'] <= start_time, self.data)[offset:offset + limit]
+
+    def end_time_limit_data(self, end_time, limit, offset):
+        return filter(lambda a: end_time <= a['created'], self.data)[offset:offset + limit]
+
     def limit_data(self, limit, offset):
-        return self.data[limit:limit + offset]
+        return self.data[offset:offset + limit]
 
     def __call__(self, request):
         try:
             from urlparse import parse_qs
         except ImportError:
             from urllib.parse import parse_qs
-        data = parse_qs(request.get_full_url().split('?')[1])
+        full_url = request.get_full_url()
+        if '?' in full_url:
+            data = parse_qs(full_url.split('?')[1])
+        else:
+            data = {}
 
-        start_time = end_time = limit = offset = None
+        start_time = end_time = None
+        limit = 100
+        offset = 0
         if 'start_time' in data:
-            start_time = int(data['start_time'][0])
+            try:
+                start_time = int(data['start_time'][0])
+            except ValueError:
+                raise HTTPError(request.get_full_url(), 400, 'BAD REQUEST', '', StringIO())
 
         if 'end_time' in data:
-            end_time = int(data['end_time'][0])
+            try:
+                end_time = int(data['end_time'][0])
+            except ValueError:
+                raise HTTPError(request.get_full_url(), 400, 'BAD REQUEST', '', StringIO())
 
         if 'limit' in data:
-            limit = int(data['limit'][0])
+            try:
+                limit = int(data['limit'][0])
+            except ValueError:
+                raise HTTPError(request.get_full_url(), 400, 'BAD REQUEST', '', StringIO())
 
         if 'offset' in data:
-            offset = int(data['offset'][0])
+            try:
+                offset = int(data['offset'][0])
+            except ValueError:
+                raise HTTPError(request.get_full_url(), 400, 'BAD REQUEST', '', StringIO())
 
         if start_time and end_time:
             data = self.time_period_data(start_time, end_time)
+        elif start_time:
+            data = self.start_time_limit_data(start_time, limit, offset)
+        elif end_time:
+            data = self.end_time_limit_data(end_time, limit, offset)
         else:
             data = self.limit_data(limit, offset)
 
@@ -84,7 +124,7 @@ Access-Control-Allow-Methods: POST
 Access-Control-Allow-Headers: Authorization, Content-Type, On-behalf-of, x-sg-elas-acl
 Access-Control-Max-Age: 600
 X-No-CORS-Reason: https://sendgrid.com/docs/Classroom/Basics/API/cors.html
-""", json.dumps(list(data)))
+""", json.dumps(list(data)).encode('utf-8'))
 
 
 def cover(func, in_data):
