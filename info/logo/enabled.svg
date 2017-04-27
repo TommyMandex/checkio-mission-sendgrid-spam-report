@@ -9,9 +9,9 @@
 <g id="Background_1_">
 	<path fill="#737370" d="M18.092,6h91.811C116.552,6,122,11.441,122,18.096v91.806c0,6.656-5.448,12.098-12.098,12.098H18.092
 		C11.436,122,6,116.559,6,109.902V18.096C6,11.441,11.436,6,18.092,6"/>
-	<rect x="21.717" y="38.167" fill-rule="evenodd" clip-rule="evenodd" fill="#82D1F5" width="14.946" height="83.833"/>
-	<rect x="45.59" y="59.763" fill-rule="evenodd" clip-rule="evenodd" fill="#ECECEC" width="14.961" height="62.237"/>
-	<rect x="68.463" y="76.042" fill-rule="evenodd" clip-rule="evenodd" fill="#82D1F5" width="14.932" height="45.958"/>
-	<rect x="91.322" y="89.925" fill-rule="evenodd" clip-rule="evenodd" fill="#ECECEC" width="14.961" height="32.075"/>
+	<rect x="21.717" y="28.167" fill="#82D1F5" width="14.946" height="83.833"/>
+	<rect x="45.59" y="49.763" fill="#ECECEC" width="14.961" height="62.237"/>
+	<rect x="68.463" y="66.042" fill="#82D1F5" width="14.932" height="45.958"/>
+	<rect x="91.322" y="79.925" fill="#ECECEC" width="14.961" height="32.075"/>
 </g>
 </svg>
