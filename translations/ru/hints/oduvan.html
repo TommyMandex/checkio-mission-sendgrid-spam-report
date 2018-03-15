@@ -1,0 +1,65 @@
+<body data-author="oduvan">
+<div class="question-answer">
+    <div class="question">
+        Помогите мне начать.
+    </div>
+    <div class="answer">
+        Вам нужно использовать <a href="https://py.checkio.org/projects/open/sendgrid/hint-statistics-spam/">/suppression/spam_reports</a>, чтобы получить список всех спам-отчетов за определенный период.
+    </div>
+</div>
+<div class="question-answer">
+    <div class="question">
+        Как мне сделать это в Python?
+    </div>
+    <div class="answer">
+<pre class="brush: python">
+response = sg.client.suppression.spam_reports.get(query_params={
+    'end_time': 1399496426,
+    'start_time': 1399514567
+})
+</pre>
+    </div>
+</div>
+
+<div class="question-answer">
+    <div class="question">
+        Какое здесь start_time и end_time? Как я могу получить это число из даты?
+    </div>
+    <div class="answer">
+        Это число является временной меткой. Модуль Datetime может легко преобразовать строку даты в метку времени.
+    </div>
+</div>
+
+<div class="question-answer">
+    <div class="question">
+        Вы можете показать мне код?
+    </div>
+    <div class="answer">
+<pre class="brush: python">
+end_time = datetime.strptime(str_date, '%Y-%m-%d')
+start_time = end_time + timedelta(days=1)
+response = sg.client.suppression.spam_reports.get(query_params={
+    'end_time':int(end_time.timestamp()),
+    'start_time': int(start_time.timestamp())
+})
+</pre>
+    </div>
+</div>
+
+<div class="question-answer">
+    <div class="question">
+        Это оно?
+    </div>
+    <div class="answer">
+        <p>Почти... Вам нужно вернуть размер.</p>
+        <pre class="brush: python">
+import json
+
+data = json.loads(response.body)
+return len(data)
+        </pre>
+    </div>
+</div>
+
+
+</body>
