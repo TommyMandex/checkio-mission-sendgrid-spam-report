@@ -14,8 +14,8 @@
     <div class="answer">
 <pre class="brush: python">
 response = sg.client.suppression.spam_reports.get(query_params={
-    'end_time': 1399496426,
-    'start_time': 1399514567
+    'start_time': 1399496426,
+    'end_time': 1399514567
 })
 </pre>
     </div>
@@ -36,11 +36,11 @@ response = sg.client.suppression.spam_reports.get(query_params={
     </div>
     <div class="answer">
 <pre class="brush: python">
-end_time = datetime.strptime(str_date, '%Y-%m-%d')
-start_time = end_time + timedelta(days=1)
+start_time = datetime.strptime(str_date, '%Y-%m-%d')
+end_time = start_time + timedelta(days=1)
 response = sg.client.suppression.spam_reports.get(query_params={
-    'end_time':int(end_time.timestamp()),
-    'start_time': int(start_time.timestamp())
+    'start_time': int(start_time.timestamp()),
+    'end_time':int(end_time.timestamp())
 })
 </pre>
     </div>
