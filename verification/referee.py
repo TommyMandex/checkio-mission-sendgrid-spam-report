@@ -54,7 +54,7 @@ class MockSpam(cio.MockSimple):
         self.data = data
 
     def time_period_data(self, start_time, end_time):
-        return filter(lambda a: end_time <= a['created'] <= start_time, self.data)
+        return filter(lambda a: start_time <= a['created'] <= end_time, self.data)
 
     def start_time_limit_data(self, start_time, limit, offset):
         return filter(lambda a: a['created'] <= start_time, self.data)[offset:offset + limit]
